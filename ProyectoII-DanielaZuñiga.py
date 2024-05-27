@@ -149,9 +149,12 @@ def show_help():
         'Modo Individual:',
         '   - Flecha Izquierda: Mover a la izquierda',
         '   - Flecha Derecha: Mover a la derecha',
+        '   - CTRL derecho para disparar',
         'Modo Multijugador:',
         '   - Jugador 1: Flecha Izquierda y Derecha',
+        '   - Dispara con CTRL derecho',
         '   - Jugador 2: A y D',
+        '   - Dispara con el espacio',
         '',
         'Objetivo: Eliminar a todos los enemigos sin ser golpeado.',
         '',
@@ -189,11 +192,11 @@ def main(mode):
     shoot_sound, explosion_sound = load_sounds()
 
     if mode == 'individual':
-        player1 = Player({'left': pygame.K_LEFT, 'right': pygame.K_RIGHT})
+        player1 = Player({'left': pygame.K_LEFT, 'right': pygame.K_RIGHT, 'shoot': pygame.K_RCTRL})
         all_sprites.add(player1)
     elif mode == 'multijugador':
-        player1 = Player({'left': pygame.K_LEFT, 'right': pygame.K_RIGHT})
-        player2 = Player({'left': pygame.K_a, 'right': pygame.K_d})
+        player1 = Player({'left': pygame.K_LEFT, 'right': pygame.K_RIGHT, 'shoot': pygame.K_RCTRL})
+        player2 = Player({'left': pygame.K_a, 'right': pygame.K_d, 'shoot': pygame.K_SPACE})  # Tecla de espacio para disparar
         all_sprites.add(player1, player2)
     else:
         raise ValueError("Modo de juego no válido")
@@ -211,8 +214,13 @@ def main(mode):
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_RCTRL:  # Disparo jugador 1 (tecla de espacio)
                     bullet = Bullet(player1.rect.centerx, player1.rect.top)
+                    all_sprites.add(bullet)
+                    bullets.add(bullet)
+                    shoot_sound.play()
+                elif event.key == pygame.K_SPACE:  # Disparo jugador 2 (tecla de espacio)
+                    bullet = Bullet(player2.rect.centerx, player2.rect.top)
                     all_sprites.add(bullet)
                     bullets.add(bullet)
                     shoot_sound.play()
@@ -238,3 +246,8 @@ def main(mode):
 
 if __name__ == '__main__':
     show_menu()
+
+
+if __name__ == '__main__':
+    show_menu()
+
